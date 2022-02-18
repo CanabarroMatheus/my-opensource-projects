@@ -83,3 +83,9 @@ create table access(
 	room_id bigint not null,
 	foreign key (client_id, room_id) references client_balances(client_id, room_id)
 );
+
+insert into contact_types(id, title) values(default, 'telefone');
+insert into contact_types(id, title) values(default, 'e-mail');
+insert into contact_types(id, title) values(default, 'skype');
+insert into contact_types(id, title) values(default, 'facebook');
+insert into contact_types(id, title) values(default, 'instagram');

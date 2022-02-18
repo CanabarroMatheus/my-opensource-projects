@@ -3,6 +3,7 @@ package io.github.canabarromatheus.coworkingsystem.domain.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "contact_types")
+@Table(name = "contact_types", schema = "public")
 public class ContactType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,4 +19,7 @@ public class ContactType {
 
     @Column
     private String title;
+
+    @OneToMany(mappedBy = "contactType")
+    private List<Contact> contacts;
 }
