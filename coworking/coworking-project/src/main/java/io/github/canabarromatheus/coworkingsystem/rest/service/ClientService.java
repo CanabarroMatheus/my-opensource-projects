@@ -17,6 +17,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +45,9 @@ public class ClientService {
 
     @Transactional
     public void save(ClientRequest request) throws InvalidCPFException {
-        if (!havePhoneNumberAndEmail(request)) throw new PersistenceException("Cliente precisa informar um telefone e um e-mail para ser cadastrado.");
+        if (!havePhoneNumberAndEmail(request))
+            throw new PersistenceException("Cliente precisa informar um telefone e um e-mail para ser cadastrado.");
+        validIsUnderAge(request.getBirthdate());
         CPFUtil.validCpf(request.getCpf());
         Client client = ClientMapper.toEntity(request);
         List<Contact> contacts = new ArrayList<>(client.getContacts());
@@ -67,5 +70,10 @@ public class ClientService {
                             .collect(Collectors.toList());
                     return contactsIds.contains(type);
                 });
+    }
+
+    private void validIsUnderAge(LocalDate birthdate) {
+        if (LocalDate.now().getYear() - birthdate.getYear() <= 18)
+            throw new PersistenceException("Menores de idade não podem ser cadastrados como clientes.");
     }
 }
